@@ -512,7 +512,7 @@ class App {
       this.settings.iconCustomGridColor || '#A5D6A7'
     this.iconRotateCheck.checked = this.settings.iconRotate180
 
-    if (this.isMobileDevice()) {
+    if (this.isMobileDevice() && !this.isStandalone()) {
       this.iconUpdatesSetting.style.display = 'flex'
       this.enableIconUpdatesCheck.checked = this.settings.enableIconUpdates
 
@@ -1180,9 +1180,6 @@ class App {
     this.isCurrentEmpty = false
     this.currentChar = char
 
-    // Update Page Icons
-    this.updatePageIcons(char)
-
     // Update UI active state
     const items = this.listEl.querySelectorAll('.char-item')
     items.forEach((item) => item.classList.remove('active'))
@@ -1198,6 +1195,9 @@ class App {
     }
 
     this.renderWriter(char)
+
+    // Update Page Icons
+    this.updatePageIcons(char)
   }
 
   private renderWriter(char: string, preserveState: boolean = false) {
@@ -1379,7 +1379,15 @@ class App {
     )
   }
 
+  private isStandalone(): boolean {
+    return (
+      window.matchMedia('(display-mode: standalone)').matches ||
+      (window.navigator as any).standalone === true
+    )
+  }
+
   private updatePageIcons(char: string) {
+    if (this.isStandalone()) return
     if (!this.isMobileDevice()) return
     if (!this.settings.enableIconUpdates) return
 
