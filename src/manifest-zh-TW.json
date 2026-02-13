@@ -1,4 +1,5 @@
 {
+  "id": "writeright",
   "short_name": "一筆一畫",
   "name": "一筆一畫 - 筆順快查極簡工具",
   "description": "專注規範漢字筆順查詢與書寫習慣養成，一查即得，極簡無廣告。",
@@ -24,6 +25,7 @@
   ],
   "start_url": "/zh-TW/?utm_source=pwa",
   "display": "standalone",
+  "orientation": "any",
   "background_color": "#FDFDFD",
   "theme_color": "#4CAF50",
   "scope": "/",

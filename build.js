@@ -195,7 +195,7 @@ async function build() {
     {
       lang: 'zh-CN',
       dir: '', // Root
-      manifest: 'manifest-zh-CN.json',
+      manifest: 'manifest.json',
       dataRoot: 'data/',
       jsPrefix: './',
       cssPrefix: './',
@@ -581,6 +581,19 @@ async function build() {
   )
 
   fs.writeFileSync(path.join(distDir, 'sw.js'), swContent)
+
+  // 8. Copy assetlinks.json
+  const assetLinksPath = path.join(__dirname, 'assetlinks.json')
+  if (fs.existsSync(assetLinksPath)) {
+    const wellKnownDir = path.join(distDir, '.well-known')
+    if (!fs.existsSync(wellKnownDir)) {
+      fs.mkdirSync(wellKnownDir)
+    }
+    fs.copyFileSync(assetLinksPath, path.join(wellKnownDir, 'assetlinks.json'))
+    console.log('Copied assetlinks.json to dist/.well-known/')
+  } else {
+    console.warn('assetlinks.json not found in root, skipping.')
+  }
 
   console.log('Build complete. Output directory: dist')
 }

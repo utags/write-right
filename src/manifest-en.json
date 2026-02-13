@@ -1,4 +1,5 @@
 {
+  "id": "writeright",
   "short_name": "WriteRight",
   "name": "WriteRight - Fast Chinese Stroke Order Guide",
   "description": "Focus on standard Chinese stroke order animations and writing habits. Simple, fast, and ad-free.",
@@ -24,6 +25,7 @@
   ],
   "start_url": "/en/?utm_source=pwa",
   "display": "standalone",
+  "orientation": "any",
   "background_color": "#FDFDFD",
   "theme_color": "#4CAF50",
   "scope": "/",

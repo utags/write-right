@@ -1,4 +1,5 @@
 {
+  "id": "writeright",
   "short_name": "一笔一画",
   "name": "一笔一画 - 笔顺快查极简工具",
   "description": "专注规范汉字笔顺查询与书写习惯养成，一查即得，极简无广告。",
@@ -24,6 +25,7 @@
   ],
   "start_url": "/?utm_source=pwa",
   "display": "standalone",
+  "orientation": "any",
   "background_color": "#FDFDFD",
   "theme_color": "#4CAF50",
   "scope": "/",
