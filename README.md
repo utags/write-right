@@ -5,6 +5,17 @@
 
 [English](#english) | [简体中文](#简体中文) | [繁體中文](#繁體中文)
 
+![screenshot-1](assets/screenshot-1.png)
+![screenshot-2](assets/screenshot-2.png)
+
+![screenshot-3](assets/screenshot-3.png)
+
+![screenshot-4](assets/screenshot-4.png)
+
+![screenshot-5](assets/screenshot-5.png)
+
+![screenshot-6](assets/screenshot-6.JPG)
+
 ---
 
 <a id="english"></a>
