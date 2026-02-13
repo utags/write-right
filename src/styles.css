@@ -457,6 +457,31 @@ input[type="text"]:focus {
   outline: none;
 }
 
+.setting-links {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--md-sys-color-outline);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.setting-links a {
+  color: var(--md-sys-color-primary);
+  text-decoration: none;
+}
+
+.setting-links a:hover {
+  text-decoration: underline;
+}
+
+.setting-links .separator {
+  opacity: 0.5;
+  color: var(--md-sys-color-outline);
+}
+
 .footer-credit {
   margin-top: 24px;
   text-align: center;
@@ -778,4 +803,57 @@ body.zen-mode .display-area {
   padding-bottom: constant(safe-area-inset-bottom);
   padding-bottom: env(safe-area-inset-bottom);
   overflow: hidden; /* Force no scrollbars */
+}
+
+/* Custom Checkbox (Toggle Switch Style) */
+.setting-item input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 52px;
+  height: 32px;
+  background-color: var(--md-sys-color-surface-variant);
+  border-radius: 16px;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  border: 1px solid var(--md-sys-color-outline);
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+  flex-shrink: 0; /* Prevent shrinking in flex containers */
+  -webkit-tap-highlight-color: transparent;
+}
+
+.setting-item input[type="checkbox"]::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 22px;
+  height: 22px;
+  background-color: var(--md-sys-color-outline);
+  border-radius: 50%;
+  transition:
+    transform 0.2s,
+    background-color 0.2s,
+    width 0.2s;
+}
+
+.setting-item input[type="checkbox"]:checked {
+  background-color: var(--md-sys-color-primary);
+  border-color: var(--md-sys-color-primary);
+}
+
+.setting-item input[type="checkbox"]:checked::after {
+  transform: translateX(20px);
+  background-color: var(--md-sys-color-on-primary);
+}
+
+/* Active state (pressed) */
+.setting-item input[type="checkbox"]:active::after {
+  width: 28px; /* Expand slightly like MD3 */
+}
+
+.setting-item input[type="checkbox"]:active:checked::after {
+  transform: translateX(14px); /* Adjust for wider handle */
 }

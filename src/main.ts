@@ -29,6 +29,7 @@ interface Settings {
   gridLineStyle: 'dashed' | 'solid' | 'dotted'
   language: 'zh-CN' | 'zh-TW' | 'en'
   defaultText: string
+  rememberLastSearch: boolean
   enableIconUpdates: boolean
   iconStyle: 'default' | 'red-gold' | 'red-black' | 'custom'
   iconCustomBgColor: string
@@ -45,6 +46,7 @@ const DEFAULT_SETTINGS: Settings = {
   gridLineStyle: 'dashed',
   language: 'zh-CN',
   defaultText: '汉字笔顺',
+  rememberLastSearch: false,
   enableIconUpdates: true,
   iconStyle: 'default',
   iconCustomBgColor: '#4CAF50',
@@ -70,6 +72,7 @@ const TRANSLATIONS = {
     'settings.gridLineStyle.dotted': '点线',
     'settings.language': '语言',
     'settings.defaultText': '默认文本',
+    'settings.rememberLastSearch': '记住最后查询',
     'settings.enableIconUpdates': '动态图标',
     'settings.iconStyle': '图标风格',
     'settings.iconStyle.default': '默认 (绿底白字)',
@@ -82,6 +85,9 @@ const TRANSLATIONS = {
     'settings.iconRotate180': '图标倒置 (180°)',
     'settings.privacyPolicy': '隐私政策',
     'settings.projectUrl': '项目地址',
+    'settings.feedback': '问题反馈',
+    'settings.reset': '恢复默认设置',
+    'settings.resetConfirm': '确定要恢复所有默认设置吗？此操作无法撤销。',
     'app.title': '一笔一画',
     'app.pageTitle': '一笔一画 - 笔顺快查极简工具',
     'app.inputPlaceholder': '请输入汉字...',
@@ -106,6 +112,7 @@ const TRANSLATIONS = {
     'settings.gridLineStyle.dotted': '點線',
     'settings.language': '語言',
     'settings.defaultText': '默認文本',
+    'settings.rememberLastSearch': '記住最後查詢',
     'settings.enableIconUpdates': '動態圖標',
     'settings.iconStyle': '圖標風格',
     'settings.iconStyle.default': '默認 (綠底白字)',
@@ -118,6 +125,9 @@ const TRANSLATIONS = {
     'settings.iconRotate180': '圖標倒置 (180°)',
     'settings.privacyPolicy': '隱私政策',
     'settings.projectUrl': '項目地址',
+    'settings.feedback': '問題反饋',
+    'settings.reset': '恢復默認設置',
+    'settings.resetConfirm': '確定要恢復所有默認設置嗎？此操作無法撤銷。',
     'app.title': '一筆一畫',
     'app.pageTitle': '一筆一畫 - 筆順快查極簡工具',
     'app.inputPlaceholder': '請輸入漢字...',
@@ -142,7 +152,8 @@ const TRANSLATIONS = {
     'settings.gridLineStyle.dotted': 'Dotted',
     'settings.language': 'Language',
     'settings.defaultText': 'Default Text',
-    'settings.enableIconUpdates': 'Dynamic Icon',
+    'settings.rememberLastSearch': 'Remember Last Search',
+    'settings.enableIconUpdates': 'Dynamic Icons',
     'settings.iconStyle': 'Icon Style',
     'settings.iconStyle.default': 'Default (Green/White)',
     'settings.iconStyle.redGold': 'Red/Gold',
@@ -154,6 +165,10 @@ const TRANSLATIONS = {
     'settings.iconRotate180': 'Upside Down (180°)',
     'settings.privacyPolicy': 'Privacy Policy',
     'settings.projectUrl': 'Project URL',
+    'settings.feedback': 'Feedback',
+    'settings.reset': 'Reset All Settings',
+    'settings.resetConfirm':
+      'Are you sure you want to reset all settings? This cannot be undone.',
     'app.title': 'WriteRight',
     'app.pageTitle': 'WriteRight - Fast Chinese Stroke Order Guide',
     'app.inputPlaceholder': 'Enter Chinese characters...',
@@ -227,6 +242,7 @@ class App {
   private gridLineStyleSelect: HTMLSelectElement
   private languageSelect: HTMLSelectElement
   private defaultTextInput: HTMLInputElement
+  private rememberLastSearchCheck: HTMLInputElement
   private iconUpdatesSetting: HTMLElement
   private enableIconUpdatesCheck: HTMLInputElement
   private iconStyleSelect: HTMLSelectElement
@@ -235,6 +251,7 @@ class App {
   private iconGridColorPicker: HTMLInputElement
   private iconRotateCheck: HTMLInputElement
   private iconStyleSettings: HTMLElement
+  private resetSettingsBtn: HTMLButtonElement
 
   constructor() {
     this.settings = this.loadSettings()
@@ -350,6 +367,9 @@ class App {
     this.defaultTextInput = document.getElementById(
       'default-text-input'
     ) as HTMLInputElement
+    this.rememberLastSearchCheck = document.getElementById(
+      'remember-last-search-check'
+    ) as HTMLInputElement
     this.iconUpdatesSetting = document.getElementById(
       'icon-updates-setting'
     ) as HTMLElement
@@ -374,6 +394,9 @@ class App {
     this.iconStyleSettings = document.getElementById(
       'icon-style-settings'
     ) as HTMLElement
+    this.resetSettingsBtn = document.getElementById(
+      'reset-settings-btn'
+    ) as HTMLButtonElement
 
     // Check language redirect immediately after elements init (or even before)
     this.checkLanguageRedirect()
@@ -395,8 +418,18 @@ class App {
         this.inputEl.value = query
       }
     } else {
-      // Initial example if no query param
-      this.inputEl.value = this.settings.defaultText || '汉字笔顺'
+      // Check localStorage if enabled
+      let lastSearch = ''
+      if (this.settings.rememberLastSearch) {
+        lastSearch = localStorage.getItem('last-search-content') || ''
+      }
+
+      if (lastSearch) {
+        this.inputEl.value = lastSearch
+      } else {
+        // Initial example if no query param
+        this.inputEl.value = this.settings.defaultText || '汉字笔顺'
+      }
     }
 
     // Only generate list if there is a value
@@ -504,6 +537,7 @@ class App {
     this.gridLineStyleSelect.value = this.settings.gridLineStyle
     this.languageSelect.value = this.settings.language
     this.defaultTextInput.value = this.settings.defaultText || '汉字笔顺'
+    this.rememberLastSearchCheck.checked = this.settings.rememberLastSearch
 
     this.iconStyleSelect.value = this.settings.iconStyle || 'default'
     this.iconBgColorPicker.value = this.settings.iconCustomBgColor || '#4CAF50'
@@ -905,6 +939,18 @@ class App {
       this.saveSettings()
     })
 
+    // Remember Last Search
+    this.rememberLastSearchCheck.addEventListener('change', (e) => {
+      this.settings.rememberLastSearch = (e.target as HTMLInputElement).checked
+      this.saveSettings()
+      // Clear localStorage if disabled?
+      // User didn't specify, but it's cleaner.
+      // Or maybe not, in case they re-enable.
+      // Let's stick to "Enable: save... Next time: read...".
+      // If disabled, we just stop saving and stop reading.
+      // Existing data can stay or be stale. I'll leave it.
+    })
+
     // Enable Icon Updates
     this.enableIconUpdatesCheck.addEventListener('change', (e) => {
       this.settings.enableIconUpdates = (e.target as HTMLInputElement).checked
@@ -963,6 +1009,16 @@ class App {
       this.saveSettings()
       if (this.currentChar) {
         this.updatePageIcons(this.currentChar)
+      }
+    })
+
+    // Reset Settings
+    this.resetSettingsBtn.addEventListener('click', () => {
+      const lang = this.settings.language
+      const t = TRANSLATIONS[lang]
+      if (confirm(t['settings.resetConfirm' as keyof typeof t])) {
+        localStorage.removeItem('app-settings')
+        window.location.reload()
       }
     })
   }
@@ -1124,6 +1180,11 @@ class App {
 
   private generateList(pushState: boolean = true) {
     const text = this.inputEl.value.trim()
+
+    if (this.settings.rememberLastSearch) {
+      localStorage.setItem('last-search-content', text)
+    }
+
     if (!text) return
 
     // Filter for Chinese characters (basic range)

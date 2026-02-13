@@ -13,6 +13,7 @@
     <meta name="theme-color" content="#4CAF50" id="theme-color-meta" />
     <link rel="canonical" href="https://writeright.pipecraft.net/" />
     <link rel="manifest" href="manifest.json" />
+    <!-- SPLASH_SCREENS_PLACEHOLDER -->
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -179,6 +180,21 @@
           </div>
           <div
             class="setting-item"
+            style="
+              flex-direction: row;
+              justify-content: space-between;
+              align-items: center;
+            ">
+            <label
+              for="remember-last-search-check"
+              data-i18n="settings.rememberLastSearch"
+              style="margin: 0"
+              >记住最后查询</label
+            >
+            <input type="checkbox" id="remember-last-search-check" />
+          </div>
+          <div
+            class="setting-item"
             id="icon-updates-setting"
             style="
               display: none;
@@ -259,6 +275,23 @@
               <option value="en">English</option>
             </select>
           </div>
+          <div class="setting-item" style="margin-top: 16px">
+            <button
+              id="reset-settings-btn"
+              style="
+                width: 100%;
+                padding: 10px;
+                background-color: var(--md-sys-color-surface-variant);
+                border: none;
+                border-radius: 8px;
+                color: var(--md-sys-color-on-surface);
+                font-size: 14px;
+                cursor: pointer;
+              "
+              data-i18n="settings.reset">
+              恢复默认设置
+            </button>
+          </div>
           <div class="setting-links">
             <a
               href="privacy.html"
@@ -266,6 +299,7 @@
               data-i18n="settings.privacyPolicy"
               >隐私政策</a
             >
+            <span class="separator">|</span>
             <a
               href="https://github.com/utags/write-right"
               id="project-link"
@@ -273,10 +307,21 @@
               data-i18n="settings.projectUrl"
               >项目地址</a
             >
+            <span class="separator">|</span>
+            <a
+              href="https://github.com/utags/write-right/issues"
+              id="feedback-link"
+              target="_blank"
+              data-i18n="settings.feedback"
+              >问题反馈</a
+            >
           </div>
           <div class="footer-credit">
-            Made with ❤️ by
-            <a href="https://www.pipecraft.net/" target="_blank">Pipecraft</a>
+            <div style="opacity: 0.6; margin-bottom: 4px">v{{VERSION}}</div>
+            <div>
+              Made with ❤️ by
+              <a href="https://www.pipecraft.net/" target="_blank">Pipecraft</a>
+            </div>
           </div>
         </div>
       </div>

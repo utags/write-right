@@ -51,6 +51,8 @@ Transform your home screen into a digital couplet:
 - **"Fortune Arrives"**: Enable 180° rotation to create the traditional "Upside Down Fu" icon.
 - **Full Customization**: Freely adjust background and text colors to match your wallpaper.
 
+> **Tip**: After adding it once, you need to refresh the page for the new text to take effect.
+
 ### 📱 Install App (PWA)
 
 1. Open the website in Android Chrome or iOS Safari.
@@ -123,6 +125,8 @@ This project is licensed under the [MIT License](LICENSE).
 - **倒贴福字**：开启“图标倒置 (180°)”，一键制作“福到了”吉祥图标。
 - **个性配色**：支持任意调整背景与文字颜色，打造独一无二的桌面装饰。
 
+> **友情提示**：添加过一次以后，需要刷新页面，新的文字才会生效。
+
 ### 📱 安装应用 (PWA)
 
 1. 使用 Android Chrome 或 iOS Safari 访问应用网址。
@@ -194,6 +198,8 @@ npm run build
 - **自定義風格**：提供紅底金字、紅底黑字等傳統對聯配色。
 - **倒貼福字**：開啟“圖標倒置 (180°)”，一鍵製作“福到了”吉祥圖標。
 - **個性配色**：支持任意調整背景與文字顏色，打造獨一無二的桌面裝飾。
+
+> **友情提示**：添加過一次以後，需要刷新頁面，新的文字才會生效。
 
 ### 📱 安裝應用 (PWA)
 

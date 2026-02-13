@@ -3,6 +3,7 @@ const fs = require('fs')
 const path = require('path')
 const crypto = require('crypto')
 const sharp = require('sharp')
+const packageJson = require('./package.json')
 
 async function build() {
   const distDir = path.join(__dirname, 'dist')
@@ -78,6 +79,106 @@ async function build() {
         .png()
         .toFile(path.join(distDir, 'apple-touch-icon.png'))
       console.log('Generated apple-touch-icon.png')
+
+      // Generate apple-touch-startup-image.png (2048x2732) for iOS Splash Screen
+      // Using a large portrait size with white background to cover most devices
+      // NOTE: User requested specific sizes and media queries, so we will generate multiple files below.
+      // This generic one might still be useful as fallback or we can remove it if we generate comprehensive set.
+      // We will generate specific ones now.
+
+      const iOSScreens = [
+        // iPad Pro 12.9"
+        { width: 2048, height: 2732, ratio: 2 },
+        // iPad Pro 11" / iPad Air
+        { width: 1668, height: 2388, ratio: 2 },
+        // iPad 10.2"
+        { width: 1620, height: 2160, ratio: 2 },
+        // iPhone 14 Pro Max, 13 Pro Max, 12 Pro Max
+        { width: 1290, height: 2796, ratio: 3 }, // Updated to 1290x2796 for 14 Pro Max
+        { width: 1284, height: 2778, ratio: 3 }, // 12/13 Pro Max
+        // iPhone 14 Pro, 13 Pro, 12 Pro, 12
+        { width: 1179, height: 2556, ratio: 3 }, // 14 Pro
+        { width: 1170, height: 2532, ratio: 3 }, // 12/13 Pro/12
+        // iPhone 13 mini, 12 mini
+        { width: 1080, height: 2340, ratio: 3 },
+        // iPhone 11 Pro Max, XS Max
+        { width: 1242, height: 2688, ratio: 3 },
+        // iPhone 11, XR
+        { width: 828, height: 1792, ratio: 2 },
+        // iPhone 11 Pro, XS, X
+        { width: 1125, height: 2436, ratio: 3 },
+        // iPhone 8 Plus, 7 Plus, 6s Plus, 6 Plus
+        { width: 1242, height: 2208, ratio: 3 },
+        // iPhone 8, 7, 6s, 6, SE 2nd/3rd Gen
+        { width: 750, height: 1334, ratio: 2 },
+        // iPhone SE 1st Gen, 5s, 5
+        { width: 640, height: 1136, ratio: 2 },
+      ]
+
+      const splashLinks = []
+
+      for (const screen of iOSScreens) {
+        // Portrait
+        const pFileName = `apple-splash-${screen.width}-${screen.height}.png`
+        await sharp({
+          create: {
+            width: screen.width,
+            height: screen.height,
+            channels: 4,
+            background: '#FDFDFD',
+          },
+        })
+          .composite([
+            {
+              input: await sharp(iconSvgPath)
+                .resize(
+                  Math.round(screen.width * 0.2),
+                  Math.round(screen.width * 0.2)
+                )
+                .toBuffer(), // Scale icon relative to screen width
+              gravity: 'center',
+            },
+          ])
+          .png()
+          .toFile(path.join(distDir, pFileName))
+
+        splashLinks.push(
+          `<link rel="apple-touch-startup-image" media="(device-width: ${screen.width / screen.ratio}px) and (device-height: ${screen.height / screen.ratio}px) and (-webkit-device-pixel-ratio: ${screen.ratio}) and (orientation: portrait)" href="{{PREFIX}}${pFileName}" />`
+        )
+
+        // Landscape
+        const lFileName = `apple-splash-${screen.height}-${screen.width}.png`
+        await sharp({
+          create: {
+            width: screen.height,
+            height: screen.width,
+            channels: 4,
+            background: '#FDFDFD',
+          },
+        })
+          .composite([
+            {
+              input: await sharp(iconSvgPath)
+                .resize(
+                  Math.round(screen.height * 0.15),
+                  Math.round(screen.height * 0.15)
+                )
+                .toBuffer(), // Slightly smaller relative icon for landscape? or same logic
+              gravity: 'center',
+            },
+          ])
+          .png()
+          .toFile(path.join(distDir, lFileName))
+
+        splashLinks.push(
+          `<link rel="apple-touch-startup-image" media="(device-width: ${screen.width / screen.ratio}px) and (device-height: ${screen.height / screen.ratio}px) and (-webkit-device-pixel-ratio: ${screen.ratio}) and (orientation: landscape)" href="{{PREFIX}}${lFileName}" />`
+        )
+      }
+
+      console.log('Generated iOS splash screens')
+
+      // Store splashLinks for injection later
+      global.splashLinksTemplate = splashLinks.join('\n    ')
     } catch (err) {
       console.error('Error generating PNG icons:', err)
     }
@@ -256,6 +357,18 @@ async function build() {
       `src="${variant.jsPrefix}logo.svg"`
     )
 
+    // Update apple-touch-startup-image path
+    if (global.splashLinksTemplate) {
+      const splashLinks = global.splashLinksTemplate.replace(
+        /{{PREFIX}}/g,
+        variant.jsPrefix
+      )
+      htmlContent = htmlContent.replace(
+        /<!-- SPLASH_SCREENS_PLACEHOLDER -->/,
+        splashLinks
+      )
+    }
+
     // NOTE: The link tag in index.html is already <link rel="manifest" href="manifest.json" />
     // So we don't need to change the href if we copy manifest.json to the same directory.
     // However, we should double check if it's correct.
@@ -293,6 +406,9 @@ async function build() {
       /<link rel="canonical" href=".*?" \/>/,
       `<link rel="canonical" href="${canonicalUrl}" />`
     )
+
+    // Inject Version
+    htmlContent = htmlContent.replace('{{VERSION}}', packageJson.version)
 
     fs.writeFileSync(path.join(variantDir, 'index.html'), htmlContent)
     generatedFiles.push(path.join(variant.dir, 'index.html'))
@@ -424,6 +540,7 @@ async function build() {
       .replace(/{{TITLE}}/g, translation.TITLE)
       .replace('{{CONTENT}}', translation.CONTENT)
       .replace('{{BACK_TEXT}}', translation.BACK_TEXT)
+    // Removed apple-touch-startup-image injection for privacy.html as requested
 
     fs.writeFileSync(path.join(variantDir, 'privacy.html'), privacyHtml)
     generatedFiles.push(path.join(variant.dir, 'privacy.html'))
