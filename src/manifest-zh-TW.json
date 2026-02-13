@@ -1,0 +1,34 @@
+{
+  "short_name": "一筆一畫",
+  "name": "一筆一畫 - 筆順快查極簡工具",
+  "description": "專注規範漢字筆順查詢與書寫習慣養成，一查即得，極簡無廣告。",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192 512x512",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ],
+  "start_url": "/zh-TW/?utm_source=pwa",
+  "display": "standalone",
+  "background_color": "#FDFDFD",
+  "theme_color": "#4CAF50",
+  "scope": "/",
+  "categories": [
+    "education",
+    "utilities"
+  ]
+}

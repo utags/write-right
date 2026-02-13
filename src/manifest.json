@@ -1,0 +1,34 @@
+{
+  "short_name": "一笔一画",
+  "name": "一笔一画 - 笔顺快查极简工具",
+  "description": "专注规范汉字笔顺查询与书写习惯养成，一查即得，极简无广告。",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192 512x512",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ],
+  "start_url": "/?utm_source=pwa",
+  "display": "standalone",
+  "background_color": "#FDFDFD",
+  "theme_color": "#4CAF50",
+  "scope": "/",
+  "categories": [
+    "education",
+    "utilities"
+  ]
+}

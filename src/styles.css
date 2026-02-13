@@ -1,0 +1,781 @@
+:root {
+  --md-sys-color-primary: #4caf50;
+  --md-sys-color-on-primary: #ffffff;
+  --md-sys-color-primary-container: #e8f5e9;
+  --md-sys-color-on-primary-container: #1b5e20;
+  --md-sys-color-surface: #fdfdfd;
+  --md-sys-color-surface-variant: #e1e2ec;
+  --md-sys-color-outline: #74777f;
+  --md-sys-color-background: #fdfdfd;
+  --md-sys-color-on-surface: #1a1c1e;
+  --md-ref-typeface-brand: "Roboto", sans-serif;
+  --grid-line-color: #e0e0e0;
+  --success-flash-shadow: rgba(76, 175, 80, 0.6); /* Default value */
+}
+
+/* UI Elements - Prevent Selection */
+.brand,
+.list-area,
+.modal,
+button,
+.icon-btn,
+.icon-btn-primary {
+  -webkit-user-select: none; /* Safari */
+  user-select: none;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--md-ref-typeface-brand);
+  background-color: var(--md-sys-color-background);
+  color: var(--md-sys-color-on-surface);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh; /* Better for mobile viewports */
+  overflow: hidden;
+}
+
+/* Header */
+header {
+  padding: 8px 12px;
+  display: flex;
+  flex-wrap: wrap; /* Allow wrapping for mobile */
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--md-sys-color-surface);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  z-index: 100;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+}
+
+header > * {
+  margin: 4px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 20px;
+  color: var(--md-sys-color-primary);
+  white-space: nowrap;
+  order: 1; /* Mobile: Top Left */
+}
+
+/* Settings/Zen Buttons Container (Targeting the last div) */
+header > div:last-child {
+  order: 2; /* Mobile: Top Right */
+  margin-left: auto;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  flex: 1 1 100%; /* Mobile: Full width */
+  max-width: 100%;
+  /* gap: 8px; */
+  justify-content: center;
+  order: 3; /* Mobile: Bottom Row */
+  /* margin-top: 4px; - handled by generic margin */
+}
+
+.input-group > * + * {
+  margin-left: 8px;
+}
+
+/* Search Button Visibility Logic */
+#gen-btn {
+  display: none;
+}
+
+.input-group.focused #gen-btn {
+  display: flex;
+  animation: fadeIn 0.2s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Desktop Header Layout */
+@media (min-width: 600px) {
+  header {
+    flex-wrap: nowrap;
+    height: 64px;
+    /* gap: 16px; */
+    margin: 0;
+    width: 100%;
+    padding: 8px 16px;
+  }
+
+  header > * {
+    margin: 0;
+  }
+
+  header > * + * {
+    margin-left: 16px;
+  }
+
+  .brand {
+    order: 0;
+  }
+  header > div:last-child {
+    order: 0;
+    margin-left: 0;
+  }
+
+  .input-group {
+    order: 0;
+    flex: 1;
+    width: auto;
+    max-width: 500px;
+    margin-top: 0;
+  }
+}
+
+.input-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 8px 48px 8px 12px;
+  font-size: 16px;
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: 20px;
+  outline: none;
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+  height: 40px;
+  -webkit-appearance: none;
+  appearance: none;
+  box-shadow: none; /* Remove iOS default inner shadow */
+}
+
+input[type="text"]:focus {
+  border-color: var(--md-sys-color-primary);
+  border-width: 2px;
+  padding: 7px 47px 7px 11px;
+}
+
+/* Buttons */
+.icon-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  color: var(--md-sys-color-on-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.icon-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.icon-btn svg {
+  width: 24px;
+  height: 24px;
+  stroke-width: 2;
+}
+
+.icon-btn-primary {
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  border: none;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition:
+    transform 0.1s,
+    box-shadow 0.2s;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.icon-btn-primary:active {
+  transform: scale(0.95);
+}
+
+.clear-btn {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--md-sys-color-outline);
+  padding: 4px;
+  display: none;
+}
+
+.clear-btn:hover {
+  color: var(--md-sys-color-on-surface);
+}
+
+/* List Area - Mobile Default (Horizontal Strip) */
+.list-area {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 80px; /* Fixed height for horizontal strip */
+  background-color: var(--md-sys-color-surface);
+  border-top: 1px solid var(--md-sys-color-outline);
+  overflow-x: auto;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: row; /* Horizontal layout */
+  align-items: center;
+  padding: 0 16px;
+  /* gap: 12px; */
+  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.05);
+  z-index: 90;
+  /* flex-shrink: 0; - Removed as it is now fixed */
+}
+
+.list-area > * + * {
+  margin-left: 12px;
+}
+
+.char-item {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--md-sys-color-on-surface);
+  border: 1px solid var(--md-sys-color-outline);
+  background-color: var(--md-sys-color-surface);
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.char-item:hover {
+  background-color: var(--md-sys-color-surface-variant);
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.char-item.active {
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+  font-weight: bold;
+  border-color: var(--md-sys-color-primary);
+}
+
+/* Toast */
+.toast {
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #323232;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-size: 14px;
+  opacity: 0.9;
+  z-index: 100;
+  transition: opacity 0.3s;
+}
+
+.toast.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Controls */
+.control-bar {
+  display: flex;
+  justify-content: center;
+  padding: 4px;
+  width: 100%;
+}
+
+.control-group {
+  display: flex;
+  /* gap: 8px; */
+  background-color: var(--md-sys-color-surface);
+  padding: 4px 12px;
+  border-radius: 32px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.control-group > * + * {
+  margin-left: 8px;
+}
+
+/* Settings Modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: var(--md-sys-color-surface);
+  padding: 24px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-shrink: 0;
+}
+
+.modal-body {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  padding-right: 4px; /* Prevent scrollbar from touching content */
+}
+
+.modal-header h2 {
+  font-size: 20px;
+  margin: 0;
+}
+
+.setting-item {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  /* gap: 8px; */
+}
+
+.setting-item > * + * {
+  margin-top: 8px;
+}
+
+.setting-item label {
+  font-size: 14px;
+  color: var(--md-sys-color-on-surface);
+  opacity: 0.8;
+}
+
+.setting-item input[type="color"] {
+  width: 100%;
+  height: 40px;
+  border: none;
+  cursor: pointer;
+  background: none;
+  -webkit-appearance: none;
+  appearance: none;
+  padding: 0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.setting-item input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.setting-item input[type="color"]::-webkit-color-swatch {
+  border: none;
+  border-radius: 4px;
+}
+
+.setting-item input[type="color"]::-moz-color-swatch {
+  border: none;
+  border-radius: 4px;
+}
+
+.setting-item select {
+  width: 100%;
+  height: 40px;
+  padding: 8px 32px 8px 12px;
+  border-radius: 4px;
+  border: 1px solid var(--md-sys-color-outline);
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  font-size: 16px; /* Prevent iOS zoom */
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2374777f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
+  cursor: pointer;
+}
+
+.setting-item select:focus {
+  border-color: var(--md-sys-color-primary);
+  outline: none;
+}
+
+.footer-credit {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--md-sys-color-outline);
+  width: 100%;
+}
+
+.footer-credit a {
+  color: var(--md-sys-color-primary);
+  text-decoration: none;
+}
+
+.footer-credit a:hover {
+  text-decoration: underline;
+}
+
+/* Animations */
+@keyframes flash {
+  0% {
+    box-shadow: 0 0 0 0 var(--success-flash-shadow);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+  }
+}
+
+.success-flash {
+  animation: flash 0.5s ease-out;
+}
+
+.debug-info {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: monospace;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.target-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.debug-info.hidden {
+  display: none;
+}
+
+/* Main Content */
+main {
+  display: flex;
+  flex-direction: column; /* Mobile Default: Column */
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  position: relative;
+  /* Fixed Layout Spacing - Mobile Default */
+  padding-top: 110px; /* Header approx height (2 rows) */
+  padding-bottom: 80px; /* List area height */
+  box-sizing: border-box;
+}
+
+/* Left Panel - Hanzi Display */
+.display-area {
+  flex: 1; /* Take remaining space */
+  display: flex;
+  flex-direction: column; /* Changed to column for control bar */
+  justify-content: center;
+  align-items: center;
+  background-color: #fafafa;
+  position: relative;
+  overflow: hidden;
+  /* gap: 8px; */
+  padding: 4px; /* Reduced padding to maximize space */
+  width: 100%;
+  height: 100%;
+}
+
+/* .display-area > * + * {
+    margin-top: 8px;
+} */
+
+.character-target {
+  /* JS will set width/height explicitly to ensure squareness */
+  /* Remove conflicting constraints */
+  position: relative;
+  /* aspect-ratio: 1 / 1; - Removed for iOS 9 support */
+
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 2px solid var(--md-sys-color-primary);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  /* Ensure it doesn't shrink below 0 */
+  flex-shrink: 0;
+
+  transition:
+    box-shadow 0.3s,
+    border-color 0.3s;
+}
+
+.mode-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  /* gap: 4px; */
+  flex: 1;
+  justify-content: center; /* Center content vertically */
+  min-width: 0; /* Prevent flex items from overflowing container */
+  min-height: 0; /* Allow shrinking below content size */
+}
+
+.mode-section > * + * {
+  margin-top: 4px;
+}
+
+/* Horizontal Layout Mode (Dynamic) */
+.mode-section.horizontal-layout {
+  flex-direction: row;
+  /* gap: 8px; */
+}
+
+.mode-section.horizontal-layout > * + * {
+  margin-top: 0;
+  margin-left: 8px;
+}
+
+.mode-section.horizontal-layout .control-bar {
+  width: auto;
+  padding: 0;
+}
+
+.mode-section.horizontal-layout .control-group {
+  flex-direction: column;
+  padding: 16px 8px;
+  width: auto;
+}
+
+/* Nested control group inside horizontal mode-section */
+.mode-section.horizontal-layout .control-group > * + * {
+  margin-left: 0;
+  margin-top: 8px;
+}
+
+/* Desktop / Landscape Tablet Layout */
+@media (min-width: 600px) {
+  main {
+    flex-direction: row; /* Side by side */
+    padding-top: 64px; /* Fixed Header Height */
+    padding-bottom: 0;
+    padding-right: 90px; /* List Area Width */
+  }
+
+  .list-area {
+    position: fixed;
+    top: 64px;
+    right: 0;
+    bottom: 0;
+    left: auto !important;
+    width: 90px; /* Reduced to single column width */
+    height: auto; /* Fill height */
+
+    border-top: none;
+    border-left: 1px solid var(--md-sys-color-outline);
+    box-shadow: -1px 0 3px rgba(0, 0, 0, 0.05);
+
+    /* Desktop: Vertical Single Column */
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center; /* Center items horizontally */
+    justify-content: flex-start;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 16px 0; /* Vertical padding only */
+    /* gap: 16px; */
+  }
+
+  .list-area > * + * {
+    margin-left: 0;
+    margin-top: 16px;
+  }
+
+  .char-item {
+    /* Keep fixed size from mobile */
+    /* margin: 0;  <-- REMOVE THIS or ensure spacing rule wins */
+  }
+
+  /* Ensure spacing wins by using higher specificity or order */
+  .list-area > .char-item + .char-item {
+    margin-top: 16px;
+  }
+}
+
+/* Highlight Mode Switch Buttons */
+.mode-switch-btn {
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+  border: 1px solid var(--md-sys-color-primary);
+}
+
+.mode-switch-btn:hover {
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+}
+
+/* Common Dual View Logic (Wide OR Tall) */
+@media (min-width: 800px), (min-height: 900px) {
+  .mode-section {
+    display: flex !important;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .display-area {
+    flex-direction: row;
+    padding: 4px; /* Minimal padding */
+    /* gap: 8px; */
+    align-items: stretch; /* Ensure sections fill full height */
+    justify-content: space-evenly; /* Distribute space */
+  }
+
+  .display-area > * + * {
+    margin-top: 0;
+    margin-left: 8px;
+  }
+
+  /* Ensure control bars are hidden or adjusted if needed */
+  .control-bar {
+    margin-top: 16px;
+  }
+
+  /* Hide redundant mode switch buttons in dual view */
+  .mode-switch-btn {
+    display: none !important;
+  }
+}
+
+/* Vertical Dual View (Portrait Tablet / Large Phone) */
+@media (min-height: 900px) and (orientation: portrait) {
+  .display-area {
+    flex-direction: column;
+    padding: 4px;
+    /* gap: 4px; */
+    align-items: stretch;
+  }
+
+  .display-area > * + * {
+    margin-left: 0;
+    margin-top: 4px;
+  }
+
+  .mode-section {
+    flex: 1; /* Split height evenly */
+    /* gap: 4px; */
+    min-height: 0; /* Allow shrinking below content size */
+  }
+
+  .mode-section > * + * {
+    margin-top: 4px;
+  }
+}
+
+/* Zen Mode */
+body.zen-mode header {
+  position: fixed;
+  top: 0;
+  top: constant(safe-area-inset-top);
+  top: env(safe-area-inset-top, 0px);
+  right: 0;
+  right: constant(safe-area-inset-right);
+  right: env(safe-area-inset-right, 0px);
+  left: auto;
+  width: auto;
+  background: transparent;
+  box-shadow: none;
+  pointer-events: none;
+  z-index: 100;
+  padding: 0; /* Remove header padding to allow button to be closer to edge */
+}
+
+body.zen-mode header .brand,
+body.zen-mode header .input-group,
+body.zen-mode header #settings-btn,
+body.zen-mode header #toast-msg {
+  display: none !important;
+}
+
+body.zen-mode #zen-mode-btn {
+  pointer-events: auto;
+  background-color: var(--md-sys-color-surface);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 8px; /* Reduced margin to move button closer to corner */
+}
+
+body.zen-mode .list-area {
+  display: none !important;
+}
+
+body.zen-mode main {
+  height: 100vh;
+  height: 100dvh;
+  padding: 0;
+}
+
+body.zen-mode .display-area {
+  padding: 0;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+  overflow: hidden; /* Force no scrollbars */
+}

@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title data-i18n="app.pageTitle">一笔一画 - 笔顺快查极简工具</title>
+    <meta name="description" content="学习汉字笔顺的单页面 Web 应用" />
+    <meta name="theme-color" content="#4CAF50" id="theme-color-meta" />
+    <link rel="canonical" href="https://writeright.pipecraft.net/" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <div class="brand">
+        <img
+          src="logo.svg"
+          alt="Logo"
+          style="margin-right: 8px; width: 24px; height: 24px; display: none" />
+        <span data-i18n="app.title">一笔一画</span>
+      </div>
+      <div class="input-group">
+        <div class="input-wrapper">
+          <input
+            type="text"
+            id="char-input"
+            data-i18n-placeholder="app.inputPlaceholder"
+            placeholder="请输入汉字..."
+            autocomplete="off" />
+          <button id="clear-btn" class="icon-btn clear-btn" aria-label="Clear">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <button id="gen-btn" class="icon-btn-primary" aria-label="Input">
+          <i data-lucide="search"></i>
+        </button>
+      </div>
+      <div id="toast-msg" class="toast hidden"></div>
+      <div style="margin-left: auto; display: flex; gap: 8px">
+        <button id="settings-btn" class="icon-btn" aria-label="Settings">
+          <i data-lucide="settings"></i>
+        </button>
+        <button id="zen-mode-btn" class="icon-btn" aria-label="Zen Mode">
+          <i class="icon-maximize" data-lucide="maximize"></i>
+          <i
+            class="icon-minimize"
+            data-lucide="minimize"
+            style="display: none"></i>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <div class="display-area">
+        <!-- Play Section -->
+        <div id="play-section" class="mode-section">
+          <div class="target-wrapper">
+            <div id="debug-info-play" class="debug-info hidden"></div>
+            <div id="character-target-play" class="character-target"></div>
+          </div>
+          <div class="control-bar">
+            <div id="play-controls" class="control-group">
+              <button
+                id="toggle-play-btn"
+                class="icon-btn"
+                aria-label="Play/Pause">
+                <!-- Play Icon -->
+                <i class="icon-play" data-lucide="play"></i>
+                <!-- Pause Icon (Hidden by default) -->
+                <i
+                  class="icon-pause"
+                  data-lucide="pause"
+                  style="display: none"></i>
+              </button>
+              <button id="restart-btn" class="icon-btn" aria-label="Restart">
+                <i data-lucide="rotate-ccw"></i>
+              </button>
+              <button
+                id="mode-quiz-btn"
+                class="icon-btn mode-switch-btn"
+                aria-label="Start Quiz">
+                <i data-lucide="pencil"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quiz Section -->
+        <div id="quiz-section" class="mode-section" style="display: none">
+          <div class="target-wrapper">
+            <div id="debug-info-quiz" class="debug-info hidden"></div>
+            <div id="character-target-quiz" class="character-target"></div>
+          </div>
+          <div class="control-bar">
+            <div id="quiz-controls" class="control-group">
+              <button
+                id="quiz-reset-btn"
+                class="icon-btn"
+                aria-label="Reset Quiz">
+                <i data-lucide="rotate-ccw"></i>
+              </button>
+              <button
+                id="mode-play-btn"
+                class="icon-btn mode-switch-btn"
+                aria-label="Play Mode">
+                <i data-lucide="circle-play"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="list-area" id="char-list">
+        <!-- Character list items will be injected here -->
+      </div>
+    </main>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 data-i18n="settings.title">设置</h2>
+          <button
+            id="close-settings"
+            class="icon-btn"
+            aria-label="Close Settings">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="setting-item">
+            <label data-i18n="settings.themeColor">主题颜色</label>
+            <input type="color" id="theme-color-picker" value="#4CAF50" />
+          </div>
+          <div class="setting-item">
+            <label data-i18n="settings.strokeColor">笔画颜色</label>
+            <input type="color" id="stroke-color-picker" value="#555555" />
+          </div>
+          <div class="setting-item">
+            <label data-i18n="settings.gridColor">田字格颜色</label>
+            <input type="color" id="grid-color-picker" value="#e0e0e0" />
+          </div>
+          <div class="setting-item">
+            <label data-i18n="settings.gridStyle">格线样式</label>
+            <select id="grid-style-select">
+              <option value="rice" data-i18n="settings.gridStyle.rice">
+                米字格
+              </option>
+              <option value="cross" data-i18n="settings.gridStyle.cross">
+                十字格
+              </option>
+              <option value="tic" data-i18n="settings.gridStyle.tic">
+                井字格
+              </option>
+              <option value="x" data-i18n="settings.gridStyle.x">X字格</option>
+            </select>
+          </div>
+          <div class="setting-item">
+            <label data-i18n="settings.gridLineStyle">线条类型</label>
+            <select id="grid-line-style-select">
+              <option value="dashed" data-i18n="settings.gridLineStyle.dashed">
+                虚线
+              </option>
+              <option value="solid" data-i18n="settings.gridLineStyle.solid">
+                实线
+              </option>
+              <option value="dotted" data-i18n="settings.gridLineStyle.dotted">
+                点线
+              </option>
+            </select>
+          </div>
+          <div class="setting-item">
+            <label data-i18n="settings.defaultText">默认输入文本</label>
+            <input type="text" id="default-text-input" value="汉字笔顺" />
+          </div>
+          <div
+            class="setting-item"
+            id="icon-updates-setting"
+            style="
+              display: none;
+              flex-direction: row;
+              justify-content: space-between;
+              align-items: center;
+            ">
+            <label
+              for="enable-icon-updates-check"
+              data-i18n="settings.enableIconUpdates"
+              style="margin: 0"
+              >动态图标</label
+            >
+            <input type="checkbox" id="enable-icon-updates-check" checked />
+          </div>
+          <div
+            id="icon-style-settings"
+            style="
+              display: none;
+              flex-direction: column;
+              gap: 8px;
+              padding-left: 12px;
+              border-left: 2px solid #eee;
+              margin-bottom: 12px;
+            ">
+            <div class="setting-item">
+              <label data-i18n="settings.iconStyle">图标风格</label>
+              <select id="icon-style-select">
+                <option value="default" data-i18n="settings.iconStyle.default">
+                  默认 (绿底白字)
+                </option>
+                <option value="red-gold" data-i18n="settings.iconStyle.redGold">
+                  红底金字
+                </option>
+                <option
+                  value="red-black"
+                  data-i18n="settings.iconStyle.redBlack">
+                  红底黑字
+                </option>
+                <option value="custom" data-i18n="settings.iconStyle.custom">
+                  自定义
+                </option>
+              </select>
+            </div>
+            <div
+              class="setting-item"
+              style="
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+              ">
+              <label
+                for="icon-rotate-check"
+                data-i18n="settings.iconRotate180"
+                style="margin: 0"
+                >图标倒置 (180°)</label
+              >
+              <input type="checkbox" id="icon-rotate-check" />
+            </div>
+            <div class="setting-item icon-custom-color" style="display: none">
+              <label data-i18n="settings.iconBgColor">背景颜色</label>
+              <input type="color" id="icon-bg-color-picker" value="#4CAF50" />
+            </div>
+            <div class="setting-item icon-custom-color" style="display: none">
+              <label data-i18n="settings.iconFgColor">文字颜色</label>
+              <input type="color" id="icon-fg-color-picker" value="#ffffff" />
+            </div>
+            <div class="setting-item icon-custom-color" style="display: none">
+              <label data-i18n="settings.iconGridColor">格线颜色</label>
+              <input type="color" id="icon-grid-color-picker" value="#A5D6A7" />
+            </div>
+          </div>
+          <div class="setting-item">
+            <label data-i18n="settings.language">语言</label>
+            <select id="language-select">
+              <option value="zh-CN">简体中文</option>
+              <option value="zh-TW">繁體中文</option>
+              <option value="en">English</option>
+            </select>
+          </div>
+          <div class="setting-links">
+            <a
+              href="privacy.html"
+              id="privacy-policy-link"
+              data-i18n="settings.privacyPolicy"
+              >隐私政策</a
+            >
+            <a
+              href="https://github.com/utags/write-right"
+              id="project-link"
+              target="_blank"
+              data-i18n="settings.projectUrl"
+              >项目地址</a
+            >
+          </div>
+          <div class="footer-credit">
+            Made with ❤️ by
+            <a href="https://www.pipecraft.net/" target="_blank">Pipecraft</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="dist/main.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker
+            .register('sw.js')
+            .then((registration) => {
+              console.log('SW registered: ', registration)
+
+              // Check for updates
+              registration.addEventListener('updatefound', () => {
+                const newWorker = registration.installing
+                newWorker.addEventListener('statechange', () => {
+                  if (newWorker.state === 'installed') {
+                    if (navigator.serviceWorker.controller) {
+                      // New update available
+                      console.log('New content is available; please refresh.')
+                      // Optionally show a toast to user to reload
+                      // window.location.reload();
+                    } else {
+                      // Content is cached for offline use
+                      console.log('Content is cached for offline use.')
+                    }
+                  }
+                })
+              })
+            })
+            .catch((registrationError) => {
+              console.log('SW registration failed: ', registrationError)
+            })
+
+          // Handle controller change (when new SW takes over)
+          let refreshing
+          navigator.serviceWorker.addEventListener('controllerchange', () => {
+            if (refreshing) return
+            window.location.reload()
+            refreshing = true
+          })
+        })
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="{{LANG}}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{TITLE}}</title>
+    <meta name="theme-color" content="#4CAF50" />
+    <style>
+      body {
+        font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      }
+      h1 {
+        color: #2e7d32;
+        margin-top: 0;
+        font-size: 24px;
+        border-bottom: 2px solid #e0e0e0;
+        padding-bottom: 16px;
+        margin-bottom: 24px;
+      }
+      p {
+        margin-bottom: 16px;
+      }
+      ul {
+        padding-left: 20px;
+        margin-bottom: 24px;
+      }
+      li {
+        margin-bottom: 12px;
+      }
+      strong {
+        color: #1b5e20;
+      }
+      .back-link {
+        display: inline-block;
+        margin-top: 24px;
+        color: #fff;
+        background-color: #4caf50;
+        padding: 10px 20px;
+        border-radius: 24px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: background-color 0.2s;
+      }
+      .back-link:hover {
+        background-color: #388e3c;
+      }
+      @media (max-width: 600px) {
+        body {
+          padding: 0;
+        }
+        .container {
+          padding: 24px;
+          border-radius: 0;
+          box-shadow: none;
+          min-height: 100vh;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>{{TITLE}}</h1>
+      <div class="content">{{CONTENT}}</div>
+      <a href="./" class="back-link">&larr; {{BACK_TEXT}}</a>
+    </div>
+  </body>
+</html>
