@@ -86,7 +86,7 @@ This project is licensed under the [MIT License](LICENSE).
 
 ### 👏 Acknowledgments
 
-- Thanks to [bopomofo](https://2libra.com/user/bopomofo/about) for suggesting the app name.
+- Thanks to [bopomofo](https://2libra.com/user/bopomofo/about?iid=1AeoTgXc) for suggesting the app name.
 
 ---
 
@@ -158,7 +158,7 @@ npm run build
 
 ### 👏 致谢
 
-- 感谢 [bopomofo](https://2libra.com/user/bopomofo/about) 提供应用名称建议。
+- 感谢 [bopomofo](https://2libra.com/user/bopomofo/about?iid=1AeoTgXc) 提供应用名称建议。
 
 ---
 
@@ -230,4 +230,4 @@ npm run build
 
 ### 👏 致謝
 
-- 感謝 [bopomofo](https://2libra.com/user/bopomofo/about) 提供應用名稱建議。
+- 感謝 [bopomofo](https://2libra.com/user/bopomofo/about?iid=1AeoTgXc) 提供應用名稱建議。
