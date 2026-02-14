@@ -72,13 +72,63 @@
           min-height: 100vh;
         }
       }
+      .lang-switch {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 16px;
+        gap: 8px;
+        align-items: center;
+      }
+      .lang-switch select {
+        padding: 6px 10px;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        background: #fff;
+        font-size: 14px;
+      }
+      .lang-switch .label {
+        color: #555;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
     </style>
   </head>
   <body>
     <div class="container">
+      <div class="lang-switch">
+        <span class="label"
+          ><span aria-hidden="true">🌐</span><span>{{LANG_LABEL}}</span></span
+        >
+        <select id="lang-select" aria-label="Language">
+          <option value="zh-CN">简体中文</option>
+          <option value="zh-TW">繁體中文</option>
+          <option value="en">English</option>
+        </select>
+      </div>
       <h1>{{TITLE}}</h1>
       <div class="content">{{CONTENT}}</div>
       <a href="./" class="back-link">&larr; {{BACK_TEXT}}</a>
     </div>
+    <script>
+      ;(function () {
+        var select = document.getElementById('lang-select')
+        select.value = '{{LANG}}'
+        select.addEventListener('change', function () {
+          var lang = this.value
+          var root = window.location.pathname.replace(
+            /(\/(zh-CN|zh-TW|en))?\/privacy(\.html|\/)?$/,
+            ''
+          )
+          var target =
+            lang === 'zh-CN'
+              ? root + '/privacy.html'
+              : root + '/' + lang + '/privacy.html'
+          // window.location.href = target
+          location.replace(target)
+        })
+      })()
+    </script>
   </body>
 </html>

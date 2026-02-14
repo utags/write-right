@@ -458,6 +458,7 @@ async function build() {
   const privacyTranslations = {
     'zh-CN': {
       TITLE: '隐私政策',
+      LANG_LABEL: '语言',
       CONTENT: `
         <h3>1. 数据收集与使用</h3>
         <p><strong>本应用不收集、不存储、不共享任何用户个人信息。</strong>我们无需注册，无需登录即可使用。</p>
@@ -477,11 +478,15 @@ async function build() {
         
         <h3>6. 联系我们</h3>
         <p>如果您对本隐私政策有任何疑问，请通过 <a href="https://github.com/utags/write-right/issues" target="_blank" rel="noopener noreferrer">GitHub Issues</a> 联系我们。</p>
+        
+        <h3>7. 数据来源与请求</h3>
+        <p>本应用会从服务器下载汉字笔顺资源用于展示与学习。这些网络请求不包含任何个人身份信息，服务器不会记录您的搜索习惯或存储任何用户数据。</p>
       `,
       BACK_TEXT: '返回应用',
     },
     'zh-TW': {
       TITLE: '隱私政策',
+      LANG_LABEL: '語言',
       CONTENT: `
         <h3>1. 數據收集與使用</h3>
         <p><strong>本應用不收集、不存儲、不共享任何用戶個人信息。</strong>我們無需註冊，無需登錄即可使用。</p>
@@ -501,11 +506,15 @@ async function build() {
         
         <h3>6. 聯繫我們</h3>
         <p>如果您對本隱私政策有任何疑問，請通過 <a href="https://github.com/utags/write-right/issues" target="_blank" rel="noopener noreferrer">GitHub Issues</a> 聯繫我們。</p>
+        
+        <h3>7. 數據來源與請求</h3>
+        <p>本應用會從伺服器下載漢字筆順資源用於展示與學習。這些網路請求不包含任何個人識別資訊，伺服器不會記錄您的搜尋習慣，也不會儲存任何使用者資料。</p>
       `,
       BACK_TEXT: '返回應用',
     },
     en: {
       TITLE: 'Privacy Policy',
+      LANG_LABEL: 'Language',
       CONTENT: `
         <h3>1. Data Collection and Use</h3>
         <p><strong>We do not collect, store, or share any personal information.</strong> No registration or login is required to use this app.</p>
@@ -525,6 +534,9 @@ async function build() {
         
         <h3>6. Contact Us</h3>
         <p>If you have any questions about this Privacy Policy, please contact us via <a href="https://github.com/utags/write-right/issues" target="_blank" rel="noopener noreferrer">GitHub Issues</a>.</p>
+        
+        <h3>7. Data Source & Requests</h3>
+        <p>The app downloads character stroke resources from a server for display and study. These requests contain no personally identifiable information. The server does not log your search behavior or store any user data.</p>
       `,
       BACK_TEXT: 'Back to App',
     },
@@ -536,7 +548,8 @@ async function build() {
       privacyTranslations[variant.lang] || privacyTranslations['en']
 
     let privacyHtml = privacyTemplate
-      .replace('{{LANG}}', variant.lang)
+      .replace(/{{LANG}}/g, variant.lang)
+      .replace('{{LANG_LABEL}}', translation.LANG_LABEL)
       .replace(/{{TITLE}}/g, translation.TITLE)
       .replace('{{CONTENT}}', translation.CONTENT)
       .replace('{{BACK_TEXT}}', translation.BACK_TEXT)
