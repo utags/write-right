@@ -75,28 +75,27 @@ self.addEventListener('fetch', (event) => {
     return
   }
 
-  // 2. App Shell Strategy: Network First
-  // For main files to ensure updates, fallback to cache
+  // 2. App Shell Strategy: Stale-While-Revalidate
+  // Return cached response immediately when available, and update cache in background.
   event.respondWith(
-    fetch(event.request)
-      .then((response) => {
-        // Check if we received a valid response
-        if (!response || response.status !== 200 || response.type !== 'basic') {
-          return response
-        }
+    caches.open(APP_CACHE_NAME).then((cache) => {
+      return cache.match(event.request).then((cachedResponse) => {
+        const fetchPromise = fetch(event.request)
+          .then((networkResponse) => {
+            if (
+              !networkResponse ||
+              networkResponse.status !== 200 ||
+              networkResponse.type !== 'basic'
+            ) {
+              return networkResponse
+            }
+            cache.put(event.request, networkResponse.clone())
+            return networkResponse
+          })
+          .catch(() => cachedResponse)
 
-        // Clone the response
-        const responseToCache = response.clone()
-
-        caches.open(APP_CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseToCache)
-        })
-
-        return response
+        return cachedResponse || fetchPromise
       })
-      .catch(() => {
-        // If network fails, try cache
-        return caches.match(event.request)
-      })
+    })
   )
 })

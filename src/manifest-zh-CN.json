@@ -23,7 +23,7 @@
       "purpose": "maskable"
     }
   ],
-  "start_url": "/zh-CN/?utm_source=pwa",
+  "start_url": "/zh-CN/",
   "display": "standalone",
   "orientation": "any",
   "background_color": "#FDFDFD",

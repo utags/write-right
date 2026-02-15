@@ -561,11 +561,14 @@ async function build() {
 
   const filesToCache = [
     './',
+    './zh-CN/',
+    './zh-TW/',
+    './en/',
     `./${jsFileName}`,
     cssFileName ? `./${cssFileName}` : '',
-    ...generatedFiles.map((f) => `./${f}`),
-    // Add common assets manually if not in generatedFiles
-    // We added index.html and manifest.json for each variant to generatedFiles
+    ...generatedFiles
+      .filter((f) => !f.endsWith('privacy.html'))
+      .map((f) => `./${f}`),
   ].filter(Boolean)
 
   // Deduplicate and clean paths
