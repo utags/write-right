@@ -47,7 +47,7 @@ const DEFAULT_SETTINGS: Settings = {
   language: 'zh-CN',
   defaultText: '汉字笔顺',
   rememberLastSearch: false,
-  enableIconUpdates: true,
+  enableIconUpdates: false,
   iconStyle: 'default',
   iconCustomBgColor: '#4CAF50',
   iconCustomFgColor: '#ffffff',
@@ -1021,6 +1021,29 @@ class App {
         window.location.reload()
       }
     })
+
+    const privacyLink = document.getElementById(
+      'privacy-policy-link'
+    ) as HTMLAnchorElement | null
+    if (privacyLink) {
+      // const orgHref = privacyLink.href
+      // privacyLink.href = `https://302.pipecraft.net/${orgHref.replace(/^https?:\/\//, '')}`
+      privacyLink.addEventListener('click', (e) => {
+        if (!this.isStandalone()) {
+          return
+        }
+        e.preventDefault()
+        const lang = this.settings.language
+        let path = '/privacy.html'
+        if (lang === 'zh-TW') {
+          path = '/zh-TW/privacy.html'
+        } else if (lang === 'en') {
+          path = '/en/privacy.html'
+        }
+        const url = `https://writeright.pipecraft.net${path}`
+        window.open(url, '_blank')
+      })
+    }
   }
 
   private openSettings() {
