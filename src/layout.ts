@@ -45,6 +45,7 @@ export function calculateLayoutMode(
   else if (sizeSide > sizeBottom + 10) {
     return true
   }
+
   // 3. Otherwise default to Bottom
   return false
 }

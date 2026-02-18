@@ -3,6 +3,7 @@ import 'promise-polyfill/src/polyfill'
 import 'url-search-params-polyfill'
 import HanziWriter from 'hanzi-writer'
 import { createIcons } from './lucide-loader'
+import { $$ } from './utils'
 import X from 'lucide/dist/esm/lucide/src/icons/x.js'
 import Search from 'lucide/dist/esm/lucide/src/icons/search.js'
 import Settings from 'lucide/dist/esm/lucide/src/icons/settings.js'
@@ -271,29 +272,31 @@ class App {
       },
     })
 
-    this.inputEl = document.getElementById('char-input') as HTMLInputElement
-    this.clearBtn = document.getElementById('clear-btn') as HTMLButtonElement
-    this.genBtn = document.getElementById('gen-btn') as HTMLButtonElement
-    this.listEl = document.getElementById('char-list') as HTMLElement
-    this.toastEl = document.getElementById('toast-msg') as HTMLElement
+    this.inputEl = document.querySelector('#char-input') as HTMLInputElement
+    this.clearBtn = document.querySelector('#clear-btn') as HTMLButtonElement
+    this.genBtn = document.querySelector('#gen-btn') as HTMLButtonElement
+    this.listEl = document.querySelector('#char-list') as HTMLElement
+    this.toastEl = document.querySelector('#toast-msg') as HTMLElement
 
     // Sections
-    this.playSection = document.getElementById('play-section') as HTMLElement
-    this.quizSection = document.getElementById('quiz-section') as HTMLElement
-    this.targetElPlay = document.getElementById(
-      'character-target-play'
+    this.playSection = document.querySelector('#play-section') as HTMLElement
+    this.quizSection = document.querySelector('#quiz-section') as HTMLElement
+    this.targetElPlay = document.querySelector(
+      '#character-target-play'
     ) as HTMLElement
-    this.targetElQuiz = document.getElementById(
-      'character-target-quiz'
+    this.targetElQuiz = document.querySelector(
+      '#character-target-quiz'
     ) as HTMLElement
 
     // Debug
-    this.isDebugMode = new URLSearchParams(window.location.search).has('debug')
-    this.debugInfoPlay = document.getElementById(
-      'debug-info-play'
+    this.isDebugMode = new URLSearchParams(globalThis.location.search).has(
+      'debug'
+    )
+    this.debugInfoPlay = document.querySelector(
+      '#debug-info-play'
     ) as HTMLElement
-    this.debugInfoQuiz = document.getElementById(
-      'debug-info-quiz'
+    this.debugInfoQuiz = document.querySelector(
+      '#debug-info-quiz'
     ) as HTMLElement
 
     if (this.isDebugMode) {
@@ -301,14 +304,14 @@ class App {
       this.debugInfoQuiz.classList.remove('hidden')
     }
 
-    this.togglePlayBtn = document.getElementById(
-      'toggle-play-btn'
+    this.togglePlayBtn = document.querySelector(
+      '#toggle-play-btn'
     ) as HTMLButtonElement
-    this.restartBtn = document.getElementById(
-      'restart-btn'
+    this.restartBtn = document.querySelector(
+      '#restart-btn'
     ) as HTMLButtonElement
-    this.modeQuizBtn = document.getElementById(
-      'mode-quiz-btn'
+    this.modeQuizBtn = document.querySelector(
+      '#mode-quiz-btn'
     ) as HTMLButtonElement
     this.iconPlay = this.togglePlayBtn.querySelector(
       '.icon-play'
@@ -317,27 +320,27 @@ class App {
       '.icon-pause'
     ) as HTMLElement
 
-    this.quizResetBtn = document.getElementById(
-      'quiz-reset-btn'
+    this.quizResetBtn = document.querySelector(
+      '#quiz-reset-btn'
     ) as HTMLButtonElement
-    this.modePlayBtn = document.getElementById(
-      'mode-play-btn'
+    this.modePlayBtn = document.querySelector(
+      '#mode-play-btn'
     ) as HTMLButtonElement
 
     // Settings
-    this.settingsBtn = document.getElementById(
-      'settings-btn'
+    this.settingsBtn = document.querySelector(
+      '#settings-btn'
     ) as HTMLButtonElement
-    this.settingsModal = document.getElementById(
-      'settings-modal'
+    this.settingsModal = document.querySelector(
+      '#settings-modal'
     ) as HTMLElement
-    this.closeSettingsBtn = document.getElementById(
-      'close-settings'
+    this.closeSettingsBtn = document.querySelector(
+      '#close-settings'
     ) as HTMLButtonElement
 
     // Zen Mode
-    this.zenModeBtn = document.getElementById(
-      'zen-mode-btn'
+    this.zenModeBtn = document.querySelector(
+      '#zen-mode-btn'
     ) as HTMLButtonElement
     this.iconMaximize = this.zenModeBtn.querySelector(
       '.icon-maximize'
@@ -346,56 +349,56 @@ class App {
       '.icon-minimize'
     ) as HTMLElement
 
-    this.themeColorPicker = document.getElementById(
-      'theme-color-picker'
+    this.themeColorPicker = document.querySelector(
+      '#theme-color-picker'
     ) as HTMLInputElement
-    this.strokeColorPicker = document.getElementById(
-      'stroke-color-picker'
+    this.strokeColorPicker = document.querySelector(
+      '#stroke-color-picker'
     ) as HTMLInputElement
-    this.gridColorPicker = document.getElementById(
-      'grid-color-picker'
+    this.gridColorPicker = document.querySelector(
+      '#grid-color-picker'
     ) as HTMLInputElement
-    this.gridStyleSelect = document.getElementById(
-      'grid-style-select'
+    this.gridStyleSelect = document.querySelector(
+      '#grid-style-select'
     ) as HTMLSelectElement
-    this.gridLineStyleSelect = document.getElementById(
-      'grid-line-style-select'
+    this.gridLineStyleSelect = document.querySelector(
+      '#grid-line-style-select'
     ) as HTMLSelectElement
-    this.languageSelect = document.getElementById(
-      'language-select'
+    this.languageSelect = document.querySelector(
+      '#language-select'
     ) as HTMLSelectElement
-    this.defaultTextInput = document.getElementById(
-      'default-text-input'
+    this.defaultTextInput = document.querySelector(
+      '#default-text-input'
     ) as HTMLInputElement
-    this.rememberLastSearchCheck = document.getElementById(
-      'remember-last-search-check'
+    this.rememberLastSearchCheck = document.querySelector(
+      '#remember-last-search-check'
     ) as HTMLInputElement
-    this.iconUpdatesSetting = document.getElementById(
-      'icon-updates-setting'
+    this.iconUpdatesSetting = document.querySelector(
+      '#icon-updates-setting'
     ) as HTMLElement
-    this.enableIconUpdatesCheck = document.getElementById(
-      'enable-icon-updates-check'
+    this.enableIconUpdatesCheck = document.querySelector(
+      '#enable-icon-updates-check'
     ) as HTMLInputElement
-    this.iconStyleSelect = document.getElementById(
-      'icon-style-select'
+    this.iconStyleSelect = document.querySelector(
+      '#icon-style-select'
     ) as HTMLSelectElement
-    this.iconBgColorPicker = document.getElementById(
-      'icon-bg-color-picker'
+    this.iconBgColorPicker = document.querySelector(
+      '#icon-bg-color-picker'
     ) as HTMLInputElement
-    this.iconFgColorPicker = document.getElementById(
-      'icon-fg-color-picker'
+    this.iconFgColorPicker = document.querySelector(
+      '#icon-fg-color-picker'
     ) as HTMLInputElement
-    this.iconGridColorPicker = document.getElementById(
-      'icon-grid-color-picker'
+    this.iconGridColorPicker = document.querySelector(
+      '#icon-grid-color-picker'
     ) as HTMLInputElement
-    this.iconRotateCheck = document.getElementById(
-      'icon-rotate-check'
+    this.iconRotateCheck = document.querySelector(
+      '#icon-rotate-check'
     ) as HTMLInputElement
-    this.iconStyleSettings = document.getElementById(
-      'icon-style-settings'
+    this.iconStyleSettings = document.querySelector(
+      '#icon-style-settings'
     ) as HTMLElement
-    this.resetSettingsBtn = document.getElementById(
-      'reset-settings-btn'
+    this.resetSettingsBtn = document.querySelector(
+      '#reset-settings-btn'
     ) as HTMLButtonElement
 
     // Check language redirect immediately after elements init (or even before)
@@ -406,7 +409,7 @@ class App {
     this.handleResize()
 
     // Check for 'q' parameter in URL
-    const urlParams = new URLSearchParams(window.location.search)
+    const urlParams = new URLSearchParams(globalThis.location.search)
     const query = urlParams.get('q')
 
     if (query) {
@@ -446,7 +449,7 @@ class App {
   private loadSettings(): Settings {
     // 1. Check for injected language from HTML (highest priority for determining current session context if we want to respect URL)
     // However, we want to respect USER PREFERENCE if it exists.
-    const injectedLang = (window as any).HANZI_LANG
+    const injectedLang = (globalThis as any).HANZI_LANG
 
     const saved = localStorage.getItem('app-settings')
     if (saved) {
@@ -461,7 +464,7 @@ class App {
     // 2. No saved settings -> Use URL language (injected) or System Language
     // But if we are at root (/), we treat it as "undecided" and fallback to System Language
     // to determine the correct redirection target.
-    const pathname = window.location.pathname
+    const pathname = globalThis.location.pathname
     const isRoot = pathname === '/' || pathname === '/index.html'
 
     if (injectedLang && !isRoot) {
@@ -479,6 +482,7 @@ class App {
     } else {
       defaultLang = 'en'
     }
+
     return { ...DEFAULT_SETTINGS, language: defaultLang }
   }
 
@@ -497,7 +501,7 @@ class App {
       targetPrefix = '/zh-TW/'
     }
 
-    const pathname = window.location.pathname
+    const pathname = globalThis.location.pathname
 
     // We redirect if:
     // 1. We are not at the target prefix (e.g. at / or /en/ when lang is zh-CN)
@@ -506,14 +510,14 @@ class App {
 
     if (!pathname.startsWith(targetPrefix)) {
       // Perform redirect
-      const search = window.location.search
+      const search = globalThis.location.search
       // Ensure targetPrefix ends with / and we append search params
       const targetUrl = targetPrefix + search
 
       console.log(
         `Language redirect: ${pathname} -> ${targetUrl} (Lang: ${currentLang})`
       )
-      window.location.replace(targetUrl)
+      globalThis.location.replace(targetUrl)
     }
   }
 
@@ -567,11 +571,13 @@ class App {
   private updateIconCustomColorsVisibility() {
     const isCustom = this.settings.iconStyle === 'custom'
     const display = isCustom ? 'flex' : 'none'
-    const customColorItems =
-      this.iconStyleSettings.querySelectorAll('.icon-custom-color')
-    customColorItems.forEach((item) => {
-      ;(item as HTMLElement).style.display = display
-    })
+    const customColorItems = $$<HTMLElement>(
+      '.icon-custom-color',
+      this.iconStyleSettings
+    )
+    for (const item of customColorItems) {
+      item.style.display = display
+    }
   }
 
   private applySettings() {
@@ -583,7 +589,7 @@ class App {
     )
 
     // Update Meta Theme Color
-    const metaThemeColor = document.getElementById('theme-color-meta')
+    const metaThemeColor = document.querySelector('#theme-color-meta')
     if (metaThemeColor) {
       metaThemeColor.setAttribute('content', primaryColor)
     }
@@ -666,6 +672,7 @@ class App {
           sy = y1 + (dy / length) * offset
         }
       }
+
       return `<line x1="${sx}" y1="${sy}" x2="${x2}" y2="${y2}" ${strokeAttr} />`
     }
 
@@ -765,19 +772,19 @@ class App {
     const lang = this.settings.language
     const t = TRANSLATIONS[lang]
 
-    document.querySelectorAll('[data-i18n]').forEach((el) => {
+    for (const el of $$<HTMLElement>('[data-i18n]')) {
       const key = el.getAttribute('data-i18n')
       if (key && t[key as keyof typeof t]) {
         el.textContent = t[key as keyof typeof t]
       }
-    })
+    }
 
-    document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+    for (const el of $$<HTMLInputElement>('[data-i18n-placeholder]')) {
       const key = el.getAttribute('data-i18n-placeholder')
       if (key && t[key as keyof typeof t]) {
         ;(el as HTMLInputElement).placeholder = t[key as keyof typeof t]
       }
-    })
+    }
 
     document.title = t['app.pageTitle']
     this.inputEl.placeholder = t['app.inputPlaceholder']
@@ -838,8 +845,8 @@ class App {
     })
 
     // Handle browser history navigation (Back/Forward)
-    window.addEventListener('popstate', (_event) => {
-      const urlParams = new URLSearchParams(window.location.search)
+    globalThis.addEventListener('popstate', (_event) => {
+      const urlParams = new URLSearchParams(globalThis.location.search)
       const query = urlParams.get('q')
 
       if (query) {
@@ -853,6 +860,7 @@ class App {
         // Restore default if no query parameter
         this.inputEl.value = this.settings.defaultText || '汉字笔顺'
       }
+
       this.toggleClearBtn()
       this.generateList(false) // Update view without pushing new state
     })
@@ -961,6 +969,7 @@ class App {
       } else {
         this.iconStyleSettings.style.display = 'none'
       }
+
       if (this.currentChar) {
         this.updatePageIcons(this.currentChar)
       }
@@ -1018,12 +1027,12 @@ class App {
       const t = TRANSLATIONS[lang]
       if (confirm(t['settings.resetConfirm' as keyof typeof t])) {
         localStorage.removeItem('app-settings')
-        window.location.reload()
+        globalThis.location.reload()
       }
     })
 
-    const privacyLink = document.getElementById(
-      'privacy-policy-link'
+    const privacyLink = document.querySelector(
+      '#privacy-policy-link'
     ) as HTMLAnchorElement | null
     if (privacyLink) {
       // const orgHref = privacyLink.href
@@ -1032,6 +1041,7 @@ class App {
         if (!this.isStandalone()) {
           return
         }
+
         e.preventDefault()
         const lang = this.settings.language
         let path = '/privacy.html'
@@ -1040,6 +1050,7 @@ class App {
         } else if (lang === 'en') {
           path = '/en/privacy.html'
         }
+
         const url = `https://writeright.pipecraft.net${path}`
         window.open(url, '_blank')
       })
@@ -1150,6 +1161,7 @@ class App {
         clearTimeout(this.loopTimer)
         this.loopTimer = null
       }
+
       this.updatePlayIcon()
     }
 
@@ -1227,9 +1239,9 @@ class App {
 
     // Update URL if requested
     if (pushState) {
-      const url = new URL(window.location.href)
+      const url = new URL(globalThis.location.href)
       url.searchParams.set('q', text)
-      window.history.pushState({ q: text }, '', url.toString())
+      globalThis.history.pushState({ q: text }, '', url.toString())
     }
 
     this.renderList()
@@ -1241,7 +1253,7 @@ class App {
 
   private renderList() {
     this.listEl.innerHTML = ''
-    this.charList.forEach((char, index) => {
+    for (const [index, char] of this.charList.entries()) {
       const item = document.createElement('div')
       item.className = 'char-item'
       item.textContent = char
@@ -1256,8 +1268,8 @@ class App {
           this.selectChar(char, index)
         }
       })
-      this.listEl.appendChild(item)
-    })
+      this.listEl.append(item)
+    }
   }
 
   private selectChar(char: string, index: number) {
@@ -1265,8 +1277,8 @@ class App {
     this.currentChar = char
 
     // Update UI active state
-    const items = this.listEl.querySelectorAll('.char-item')
-    items.forEach((item) => item.classList.remove('active'))
+    const items = $$<HTMLElement>('.char-item', this.listEl)
+    for (const item of items) item.classList.remove('active')
     if (items[index]) {
       const targetItem = items[index] as HTMLElement
       targetItem.classList.add('active')
@@ -1354,7 +1366,7 @@ class App {
     })
 
     if (this.isDebugMode) {
-      const playStyle = window.getComputedStyle(this.playSection)
+      const playStyle = globalThis.getComputedStyle(this.playSection)
       const playW = this.playSection.clientWidth
       const playH = this.playSection.clientHeight
       const layout = this.playSection.classList.contains('horizontal-layout')
@@ -1444,7 +1456,7 @@ class App {
     }
 
     // 3. New Request
-    const root = (window as any).HANZI_DATA_ROOT || 'data/'
+    const root = (globalThis as any).HANZI_DATA_ROOT || 'data/'
     const request = fetch(`${root}${char}.json`)
       .then((res) => res.json())
       .then((data) => {
@@ -1458,15 +1470,15 @@ class App {
   }
 
   private isMobileDevice(): boolean {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
       navigator.userAgent
     )
   }
 
   private isStandalone(): boolean {
     return (
-      window.matchMedia('(display-mode: standalone)').matches ||
-      (window.navigator as any).standalone === true
+      globalThis.matchMedia('(display-mode: standalone)').matches ||
+      (globalThis.navigator as any).standalone === true
     )
   }
 
@@ -1517,8 +1529,9 @@ class App {
           if (!link) {
             link = document.createElement('link')
             link.rel = 'icon'
-            document.head.appendChild(link)
+            document.head.append(link)
           }
+
           link.href = url
           link.type = 'image/png'
         })
@@ -1531,8 +1544,9 @@ class App {
           if (!link) {
             link = document.createElement('link')
             link.rel = 'apple-touch-icon'
-            document.head.appendChild(link)
+            document.head.append(link)
           }
+
           link.href = url
         })
 
@@ -1561,7 +1575,7 @@ class App {
             })
             const manifestUrl = URL.createObjectURL(blob)
 
-            let link = document.querySelector(
+            const link = document.querySelector(
               'link[rel="manifest"]'
             ) as HTMLLinkElement
             if (link) {
@@ -1584,7 +1598,7 @@ class App {
   private getContainerSize(container: HTMLElement): number {
     if (container.offsetParent === null) return 0
 
-    const style = window.getComputedStyle(container)
+    const style = globalThis.getComputedStyle(container)
     const containerWidth =
       container.clientWidth -
       parseFloat(style.paddingLeft) -
@@ -1617,7 +1631,7 @@ class App {
   private updateSectionLayout(section: HTMLElement) {
     if (section.offsetParent === null) return
 
-    const style = window.getComputedStyle(section)
+    const style = globalThis.getComputedStyle(section)
     const w =
       section.clientWidth -
       parseFloat(style.paddingLeft) -

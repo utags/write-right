@@ -4,6 +4,10 @@
   "main": "index.js",
   "scripts": {
     "p": "prettier --write .",
+    "xo": "xo --verbose",
+    "lint": "run-s lint:*",
+    "lint:code": "prettier --write . && xo --fix",
+    "lint:type": "tsc --noemit",
     "test": "vitest run",
     "build": "node build.js",
     "start": "npx serve dist",
@@ -17,15 +21,17 @@
     "@types/node": "^25.2.3",
     "esbuild": "^0.27.3",
     "hanzi-writer-data": "^2.0.1",
-    "jsdom": "^28.0.0",
+    "jsdom": "^28.1.0",
+    "npm-run-all": "^4.1.5",
     "prettier": "^3.8.1",
     "sharp": "^0.34.5",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.18"
+    "vitest": "^4.0.18",
+    "xo": "^1.2.3"
   },
   "dependencies": {
     "hanzi-writer": "^3.7.3",
-    "lucide": "^0.563.0",
+    "lucide": "^0.574.0",
     "promise-polyfill": "^8.3.0",
     "url-search-params-polyfill": "^8.2.5",
     "whatwg-fetch": "^3.6.20"

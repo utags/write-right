@@ -26,8 +26,8 @@ self.addEventListener('activate', (event) => {
     Promise.all([
       self.clients.claim(),
       // Clean up old caches
-      caches.keys().then((cacheNames) => {
-        return Promise.all(
+      caches.keys().then((cacheNames) =>
+        Promise.all(
           cacheNames.map((cacheName) => {
             // Only delete old App Shell caches (starting with 'write-right-')
             // Preserve Data Cache ('hanzi-data-cache-v1')
@@ -40,7 +40,7 @@ self.addEventListener('activate', (event) => {
             }
           })
         )
-      }),
+      ),
     ])
   )
 })
@@ -52,11 +52,12 @@ self.addEventListener('fetch', (event) => {
   // Data files are in /data/ directory
   if (requestUrl.pathname.includes('/data/')) {
     event.respondWith(
-      caches.open(DATA_CACHE_NAME).then((cache) => {
-        return cache.match(event.request).then((response) => {
+      caches.open(DATA_CACHE_NAME).then((cache) =>
+        cache.match(event.request).then((response) => {
           if (response) {
             return response // Hit
           }
+
           // Miss -> Network -> Cache
           return fetch(event.request).then((networkResponse) => {
             if (
@@ -66,11 +67,12 @@ self.addEventListener('fetch', (event) => {
             ) {
               return networkResponse
             }
+
             cache.put(event.request, networkResponse.clone())
             return networkResponse
           })
         })
-      })
+      )
     )
     return
   }
@@ -78,8 +80,8 @@ self.addEventListener('fetch', (event) => {
   // 2. App Shell Strategy: Stale-While-Revalidate
   // Return cached response immediately when available, and update cache in background.
   event.respondWith(
-    caches.open(APP_CACHE_NAME).then((cache) => {
-      return cache.match(event.request).then((cachedResponse) => {
+    caches.open(APP_CACHE_NAME).then((cache) =>
+      cache.match(event.request).then((cachedResponse) => {
         const fetchPromise = fetch(event.request)
           .then((networkResponse) => {
             if (
@@ -89,6 +91,7 @@ self.addEventListener('fetch', (event) => {
             ) {
               return networkResponse
             }
+
             cache.put(event.request, networkResponse.clone())
             return networkResponse
           })
@@ -96,6 +99,6 @@ self.addEventListener('fetch', (event) => {
 
         return cachedResponse || fetchPromise
       })
-    })
+    )
   )
 })

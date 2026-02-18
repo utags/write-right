@@ -12,6 +12,7 @@ async function build() {
   if (fs.existsSync(distDir)) {
     fs.rmSync(distDir, { recursive: true, force: true })
   }
+
   fs.mkdirSync(distDir)
 
   // 2. Build with esbuild
@@ -178,7 +179,7 @@ async function build() {
       console.log('Generated iOS splash screens')
 
       // Store splashLinks for injection later
-      global.splashLinksTemplate = splashLinks.join('\n    ')
+      globalThis.splashLinksTemplate = splashLinks.join('\n    ')
     } catch (err) {
       console.error('Error generating PNG icons:', err)
     }
@@ -232,7 +233,7 @@ async function build() {
 
   const generatedFiles = []
 
-  variants.forEach((variant) => {
+  for (const variant of variants) {
     const variantDir = path.join(distDir, variant.dir)
     if (!fs.existsSync(variantDir)) {
       fs.mkdirSync(variantDir, { recursive: true })
@@ -292,7 +293,7 @@ async function build() {
         // Safer to use relative paths: "../icon.svg" for subdirs.
 
         if (variant.dir && manifestContent.icons) {
-          manifestContent.icons.forEach((icon) => {
+          for (const icon of manifestContent.icons) {
             // Remove leading slash if present to make it relative, then prepend prefix
             // Or just prepend prefix if it's a local file
             // Assuming icons are at root dist/
@@ -300,7 +301,7 @@ async function build() {
             // If we use relative paths in manifest, they are relative to manifest URL.
 
             // Let's normalize: force relative path to root
-            let cleanPath = icon.src.startsWith('/')
+            const cleanPath = icon.src.startsWith('/')
               ? icon.src.substring(1)
               : icon.src
 
@@ -319,7 +320,7 @@ async function build() {
               // Let's keep it relative for safety: "icon.svg"
               icon.src = cleanPath
             }
-          })
+          }
         }
 
         fs.writeFileSync(
@@ -358,8 +359,8 @@ async function build() {
     )
 
     // Update apple-touch-startup-image path
-    if (global.splashLinksTemplate) {
-      const splashLinks = global.splashLinksTemplate.replace(
+    if (globalThis.splashLinksTemplate) {
+      const splashLinks = globalThis.splashLinksTemplate.replace(
         /{{PREFIX}}/g,
         variant.jsPrefix
       )
@@ -377,8 +378,8 @@ async function build() {
     // Inject Lang and Data Root
     const scriptInject = `
     <script>
-      window.HANZI_LANG = '${variant.lang}';
-      window.HANZI_DATA_ROOT = '${variant.dataRoot}';
+      globalThis.HANZI_LANG = '${variant.lang}';
+      globalThis.HANZI_DATA_ROOT = '${variant.dataRoot}';
     </script>
     `
     htmlContent = htmlContent.replace('</head>', `${scriptInject}</head>`)
@@ -412,7 +413,7 @@ async function build() {
 
     fs.writeFileSync(path.join(variantDir, 'index.html'), htmlContent)
     generatedFiles.push(path.join(variant.dir, 'index.html'))
-  })
+  }
 
   // Copy icon and logo to root
   fs.copyFileSync(
@@ -542,12 +543,12 @@ async function build() {
     },
   }
 
-  variants.forEach((variant) => {
+  for (const variant of variants) {
     const variantDir = path.join(distDir, variant.dir)
     const translation =
       privacyTranslations[variant.lang] || privacyTranslations['en']
 
-    let privacyHtml = privacyTemplate
+    const privacyHtml = privacyTemplate
       .replace(/{{LANG}}/g, variant.lang)
       .replace('{{LANG_LABEL}}', translation.LANG_LABEL)
       .replace(/{{TITLE}}/g, translation.TITLE)
@@ -557,7 +558,7 @@ async function build() {
 
     fs.writeFileSync(path.join(variantDir, 'privacy.html'), privacyHtml)
     generatedFiles.push(path.join(variant.dir, 'privacy.html'))
-  })
+  }
 
   const filesToCache = [
     './',
@@ -592,7 +593,7 @@ async function build() {
   )
 
   swContent = swContent.replace(
-    /const urlsToCache = \[[^\]]*\]/s,
+    /const urlsToCache = \[[^\]]*]/s,
     `const urlsToCache = ${urlsString};`
   )
 
@@ -605,6 +606,7 @@ async function build() {
     if (!fs.existsSync(wellKnownDir)) {
       fs.mkdirSync(wellKnownDir)
     }
+
     fs.copyFileSync(assetLinksPath, path.join(wellKnownDir, 'assetlinks.json'))
     console.log('Copied assetlinks.json to dist/.well-known/')
   } else {

@@ -79,6 +79,7 @@ export function svgToPngUrl(svg: string, size: number): Promise<string> {
       } else {
         reject(new Error('Failed to get canvas context'))
       }
+
       URL.revokeObjectURL(url)
     }
 

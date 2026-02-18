@@ -1,3 +1,4 @@
+import { $$ } from './utils'
 /**
  * Custom lightweight Lucide icon loader to avoid bundling the entire library.
  * This replaces the default `createIcons` from lucide.
@@ -30,11 +31,11 @@ export function createIcons(options: {
     return
   }
 
-  const elements = document.querySelectorAll(`[${nameAttr}]`)
+  const elements = $$<HTMLElement>(`[${nameAttr}]`)
 
-  elements.forEach((element) => {
+  for (const element of elements) {
     const iconName = element.getAttribute(nameAttr)
-    if (!iconName) return
+    if (!iconName) continue
 
     // Convert kebab-case to PascalCase for lookup (e.g. "rotate-ccw" -> "RotateCcw")
     // But wait, the imported names in main.ts will be the PascalCase variables.
@@ -52,7 +53,7 @@ export function createIcons(options: {
       console.warn(
         `Icon "${iconName}" (mapped to "${componentName}") not found in provided icons.`
       )
-      return
+      continue
     }
 
     const svg = createSVG(iconData, {
@@ -63,11 +64,11 @@ export function createIcons(options: {
 
     // Copy all other attributes from the original element (like id, event handlers? no, just attributes)
     // Actually, Lucide's replaceElement copies all attributes.
-    Array.from(element.attributes).forEach((attr) => {
+    for (const attr of Array.from(element.attributes)) {
       if (attr.name !== nameAttr && attr.name !== 'class') {
         svg.setAttribute(attr.name, attr.value)
       }
-    })
+    }
 
     // Merge classes
     const existingClass = element.getAttribute('class') || ''
@@ -77,23 +78,24 @@ export function createIcons(options: {
     if (element.parentNode) {
       element.parentNode.replaceChild(svg, element)
     }
-  })
+  }
 }
 
 function createSVG(iconData: IconNode, attrs: Record<string, string | number>) {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
 
-  Object.entries(attrs).forEach(([key, value]) => {
+  for (const [key, value] of Object.entries(attrs)) {
     svg.setAttribute(key, String(value))
-  })
+  }
 
-  iconData.forEach(([tag, tagAttrs]) => {
+  for (const [tag, tagAttrs] of iconData) {
     const child = document.createElementNS('http://www.w3.org/2000/svg', tag)
-    Object.entries(tagAttrs).forEach(([key, value]) => {
+    for (const [key, value] of Object.entries(tagAttrs)) {
       child.setAttribute(key, String(value))
-    })
-    svg.appendChild(child)
-  })
+    }
+
+    svg.append(child)
+  }
 
   return svg
 }
