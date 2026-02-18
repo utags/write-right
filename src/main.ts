@@ -252,6 +252,7 @@ class App {
   private iconGridColorPicker: HTMLInputElement
   private iconRotateCheck: HTMLInputElement
   private iconStyleSettings: HTMLElement
+  private isSettingsModalOpen = false
   private resetSettingsBtn: HTMLButtonElement
 
   constructor() {
@@ -839,13 +840,23 @@ class App {
       }
     })
 
-    // Window Resize
     window.addEventListener('resize', () => {
       this.handleResize()
     })
 
-    // Handle browser history navigation (Back/Forward)
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.isSettingsModalOpen) {
+        e.preventDefault()
+        this.closeSettings()
+      }
+    })
+
     globalThis.addEventListener('popstate', (_event) => {
+      if (this.isSettingsModalOpen) {
+        this.closeSettings(true)
+        return
+      }
+
       const urlParams = new URLSearchParams(globalThis.location.search)
       const query = urlParams.get('q')
 
@@ -1058,11 +1069,32 @@ class App {
   }
 
   private openSettings() {
+    if (this.isSettingsModalOpen) {
+      return
+    }
+
     this.settingsModal.classList.remove('hidden')
+    this.isSettingsModalOpen = true
+
+    if (globalThis.history && 'pushState' in globalThis.history) {
+      globalThis.history.pushState(
+        { settingsOpen: true },
+        '',
+        globalThis.location.href
+      )
+    }
   }
 
-  private closeSettings() {
+  private closeSettings(fromPopState: boolean = false) {
     this.settingsModal.classList.add('hidden')
+    this.isSettingsModalOpen = false
+
+    if (!fromPopState && globalThis.history) {
+      const historyState = (globalThis.history as any).state
+      if (historyState && historyState.settingsOpen) {
+        globalThis.history.back()
+      }
+    }
   }
 
   private toggleZenMode() {
